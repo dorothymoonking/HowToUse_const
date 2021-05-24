@@ -2,6 +2,7 @@
 #include<string.h>
 #include<iostream>
 #include<windows.h>
+#include<conio.h>
 using namespace std;
 #pragma warning(disable:4996)
 
@@ -67,11 +68,38 @@ void FtpDown(const char* src, const char* dest, bool (*prog)(int, int), void (*r
 			break;
 		}
 	}
+
+	reEnd();
 }
 
 //--- 파일 다운 로드 상황을 GUI에 표시해 주는 연출 구현 함수
+bool ProgressWin(int total, int now)
+{
+	//각 엔진마다 설정해서 사용이 가능하다
+}
+
+bool ProgressD2D(int total, int now)
+{
+	//각 엔진마다 설정해서 사용이 가능하다
+}
+
+bool ProgressUnity(int total, int now)
+{
+	//각 엔진마다 설정해서 사용이 가능하다
+}
+
 bool Progress(int total, int now)
 {
+	//다운ㄹ드 과정을 보여 줌
+	cout << "총 " << total << " 중 " << now << " 만큼 받고 있습니다." << endl;
+
+	//만약 유저가 중지하라고 했다면...
+	if (_kbhit() && _getch() == 27) //#include<conio.h>
+	{
+		//유저가 'ESC'키를 눌러서 다운로드를 중지 요청했다면...
+		return true;
+	}
+
 	return false;
 }
 
