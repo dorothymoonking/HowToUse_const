@@ -227,12 +227,198 @@ void LevelUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 
 void GradeUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 {
+	int Reinforcedmaterials = -1;
 
+	while (true)
+	{
+		if (a_UserItem->size() <= 1)
+		{
+			cout << "강화 재료가 없어서 등급강화를 하실수 없습니다(Enter를 눌러주세요.)" << endl;
+			break;
+		}
+
+
+		srand((unsigned)time(NULL));
+		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItGrade, _list);
+		cout << endl << "강화시 -1000Gold + 재료아이템이 소모됩니다. (1)강화 (그외)종료 확률<" << m_SuccessRate << "> : ";
+		int a_Sel = 0;
+		cin >> a_Sel;
+		getchar();
+
+		if (g_GameGold < 1000)
+		{
+			cout << "강화비용이 부족합니다." << endl;
+			getchar();
+			break;
+		}
+
+		while (true) 
+		{
+			PrintItemList(a_UserItem);
+			cout << "강화재료 아이템을 선택해주세요(강화재료는 소멸됩니다.) : ";
+			int a_ItemSell = 0;
+			cin >> a_ItemSell;
+			getchar();
+
+			if ((a_ItemSell - 1) == TempNum)
+			{
+				cout << "현 아이템을 선택할수 없습니다." << endl;
+				getchar();
+				continue;
+			}
+			else if (a_UserItem->size() < a_ItemSell)
+			{
+				cout << "없는 아이템을 선택하셨습니다(Enter를 눌러주세요)" << endl;
+				getchar();
+				continue;
+			}
+			else if(a_ItemSell <= 0)
+			{
+				cout << "잘못된 번호를 입력하셨습니다." << endl;
+				getchar();
+				continue;
+			}
+			else
+			{
+				a_ItemSell--;
+				Reinforcedmaterials = a_ItemSell;
+				break;
+			}
+		}
+
+		if (a_Sel != 1)
+		{
+			cout << "강화 종료(Enter를 입력해주세요.)" << endl;
+			getchar();
+			break;
+		}
+		else
+		{
+			g_GameGold -= 1000;
+
+			int a_Ran = rand() % 100;
+			if (a_Ran < m_SuccessRate)
+			{
+				cout << "강화성공!" << endl;
+				(*a_UserItem)[TempNum].m_ItGrade++;
+				(*a_UserItem).erase(a_UserItem->begin() + Reinforcedmaterials);
+				if (Reinforcedmaterials < TempNum)
+					TempNum--;
+				(*a_UserItem)[TempNum].PrintInfo();
+				continue;
+			}
+			else
+			{
+				cout << "강화실패!" << endl;
+				(*a_UserItem).erase(a_UserItem->begin() + Reinforcedmaterials);
+				if (Reinforcedmaterials < TempNum)
+					TempNum--;
+				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				break;
+			}
+		}
+	}
 }
 
 void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 {
+	int Reinforcedmaterials = -1;
+	bool checkItem = true;
+	while (true)
+	{
+		if (a_UserItem->size() <= 1)
+		{
+			cout << "강화 재료가 없어서 등급강화를 하실수 없습니다(Enter를 눌러주세요.)" << endl;
+			break;
+		}
 
+		for (int ii = 0; ii < a_UserItem->size(); ii++)
+		{
+			if (ii == TempNum)
+				continue;
+
+			if (strcmp((*a_UserItem)[TempNum].m_ItName, (*a_UserItem)[ii].m_ItName) == 0)
+			{
+				checkItem = true;
+				break;
+			}
+			else
+			{
+				checkItem = false;
+			}
+		}
+
+		if (checkItem == false)
+		{
+			cout << "같은 이름의 아이템이 존재하지 않습니다(Enter를 눌러주세요)" << endl;
+			getchar();
+			break;
+		}
+
+		srand((unsigned)time(NULL));
+		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItGrade, _list);
+		cout << endl << "강화시 같은 이름의 아이템이 소모됩니다(골드소모X) (1)강화 (그외)종료 확률<" << m_SuccessRate << "> : ";
+		int a_Sel = 0;
+		cin >> a_Sel;
+		getchar();
+
+		while (true)
+		{
+			PrintItemList(a_UserItem);
+			cout << "강화재료 아이템을 선택해주세요(강화재료는 소멸됩니다.) : ";
+			int a_ItemSell = 0;
+			cin >> a_ItemSell;
+			getchar();
+			a_ItemSell--;
+			if (a_ItemSell == (TempNum))
+			{
+				cout << "현 아이템을 선택할수 없습니다." << endl;
+				getchar();
+				continue;
+			}
+			if (strcmp((*a_UserItem)[TempNum].m_ItName, (*a_UserItem)[a_ItemSell].m_ItName) != 0)
+			{
+				cout << "선택이 잘못되었습니다." << endl;
+				getchar();
+				continue;
+			}
+			else
+			{
+				Reinforcedmaterials = a_ItemSell;
+				break;
+			}
+		}
+
+		if (a_Sel != 1)
+		{
+			cout << "강화 종료(Enter를 입력해주세요.)" << endl;
+			getchar();
+			break;
+		}
+		else
+		{
+			int a_Ran = rand() % 100;
+			if (a_Ran < m_SuccessRate)
+			{
+				cout << "강화성공!" << endl;
+				(*a_UserItem)[TempNum].m_ItGrade++;
+				(*a_UserItem).erase(a_UserItem->begin() + Reinforcedmaterials);
+				if (Reinforcedmaterials < TempNum)
+					TempNum--;
+				(*a_UserItem)[TempNum].PrintInfo();
+				continue;
+			}
+			else
+			{
+				cout << "강화실패!" << endl;
+				(*a_UserItem).erase(a_UserItem->begin() + Reinforcedmaterials);
+				if (Reinforcedmaterials < TempNum)
+					TempNum--;
+				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				break;
+			}
+		}
+	}
 }
 
 void DescentItem(vector<ItemInfo>* a_UserItem)
@@ -269,7 +455,7 @@ void DescentItem(vector<ItemInfo>* a_UserItem)
 				int a_DeList = 0;
 				cin >> a_DeList;
 				getchar();
-				if (a_Sel < 0 || 3 < a_Sel)
+				if (a_DeList < 0 || 3 < a_DeList)
 				{
 					cout << "잘못입력하셨습니다! 처음부터 다시 입력해주세요(Enter를 누르면 재실행)" << endl;
 					getchar();
