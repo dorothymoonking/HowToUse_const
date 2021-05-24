@@ -19,3 +19,8 @@ public:
 	int m_ItGrade = 0;			   //µî±Þ 1 ~ 7
 
 };
+
+void main()
+{
+
+}
