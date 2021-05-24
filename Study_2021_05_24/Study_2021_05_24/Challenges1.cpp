@@ -154,24 +154,48 @@ void AddItem(vector<ItemInfo>* a_UserItem)
 
 int ProbabilitySet(int _data, int _list)
 {
-	int a_SuccessRate = 0;
-
+	float a_SuccessRate = 0.0f;
+	float MAXDATA = 0;
 	//_data : 레벨,등급,성급의 데이터
-	//_list : 레벨,등급,성급의 종료
+	//_list : 레벨,등급,성급의 종료 0,1,2
 
-	return a_SuccessRate;
+	if (_list == 0)
+	{
+		MAXDATA = 30.0f;
+		a_SuccessRate = 100 - (((float)_data / MAXDATA) * 100);
+	}
+
+	else if (_list == 1)
+	{
+		MAXDATA = 7.0f;
+		a_SuccessRate = 100 - ((_data / MAXDATA) * 100);
+	}
+	else if (_list == 2)
+	{
+		MAXDATA = 6.0f;
+		a_SuccessRate = 100 - ((_data / MAXDATA) * 100);
+	}
+
+	return (int)a_SuccessRate;
 }
 
 void LevelUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 {
-	int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItLevel, _list);
-
 	while (true)
 	{
-		cout << endl << "레벨 강화 - 1000Gold (1)강화 그외 종료 : ";
+		srand((unsigned)time(NULL));
+		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItLevel, _list);
+		cout << endl << "강화시 -1000Gold (1)강화 (~)종료 확률<" << m_SuccessRate << "> : ";
 		int a_Sel = 0;
 		cin >> a_Sel;
 		getchar();
+		
+		if (g_GameGold < 1000)
+		{
+			cout << "강화비용이 부족합니다." << endl;
+			getchar();
+			break;
+		}
 
 		if (a_Sel != 1)
 		{
@@ -181,7 +205,22 @@ void LevelUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 		}
 		else
 		{
-			continue;
+			g_GameGold -= 1000;
+
+			int a_Ran = rand() % 100;
+			if (a_Ran < m_SuccessRate)
+			{
+				cout << "강화성공!" << endl;
+				(*a_UserItem)[TempNum].m_ItLevel++;
+				(*a_UserItem)[TempNum].PrintInfo();
+				continue;
+			}
+			else
+			{
+				cout << "강화실패!" << endl;
+				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				break;
+			}
 		}
 	}
 }
