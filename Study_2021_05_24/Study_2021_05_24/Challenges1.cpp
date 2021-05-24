@@ -36,6 +36,65 @@ void ItemInfo::PrintInfo()
 		    "가격(" << m_Cost << ")" << endl;
 }
 
+void LoadItemList(vector<ItemInfo>* a_ItemList)
+{
+	FILE* a_rFP = fopen("SaveItem.LibData", "rb");
+	if (a_rFP != NULL)
+	{
+		int a_ItemCount = 0;
+		fread(&g_GameGold, sizeof(int), 1, a_rFP);
+		fread(&a_ItemCount, sizeof(int), 1, a_rFP);
+		if (0 < a_ItemCount)
+		{
+			ItemInfo a_TmNode;
+			int a_StrCount = 0;
+			for (int ii = 0; ii < a_ItemCount; ii++)
+			{
+				//글자수 만큼만 로딩하는 방법
+				fread(&a_StrCount, sizeof(int), 1, a_rFP);
+				if (0 < a_StrCount)
+					fread(a_TmNode.m_ItName, a_StrCount, 1, a_rFP);
+
+				fread(&a_TmNode.m_ItLevel, sizeof(int), 1, a_rFP);
+				fread(&a_TmNode.m_ItGrade, sizeof(int), 1, a_rFP);
+				fread(&a_TmNode.m_ItStar, sizeof(int), 1, a_rFP);
+				fread(&a_TmNode.m_Cost, sizeof(int), 1, a_rFP);
+
+				a_ItemList->push_back(a_TmNode);
+			}//for (int ii = 0; ii < a_ItemCount; ii++)
+		}//if (0 < a_ItemCount)
+
+		fclose(a_rFP);
+	}
+}
+
+void SaveItemList(vector<ItemInfo>* a_ItemList)
+{
+	FILE* a_wFP = fopen("SaveItem.LibData", "wb");
+	if (a_wFP != NULL)
+	{
+		int a_ItemCount = a_ItemList->size();
+		fwrite(&g_GameGold, sizeof(int), 1, a_wFP);
+		fwrite(&a_ItemCount, sizeof(int), 1, a_wFP);
+		int a_StrCount = 0;
+		for (int ii = 0; ii < a_ItemList->size(); ii++)
+		{
+			//글자수 만큼만 저장하는 방법
+			a_StrCount = strlen((*a_ItemList)[ii].m_ItName) + 1;  //"hi 아기 상어" == 13개 문자 사이즈
+			fwrite(&a_StrCount, sizeof(int), 1, a_wFP);
+			if (0 < a_StrCount)
+				fwrite((*a_ItemList)[ii].m_ItName, a_StrCount, 1, a_wFP);
+
+			fwrite(&(*a_ItemList)[ii].m_ItLevel, sizeof(int), 1, a_wFP);
+			fwrite(&(*a_ItemList)[ii].m_ItGrade, sizeof(int), 1, a_wFP);
+			fwrite(&(*a_ItemList)[ii].m_ItStar, sizeof(int), 1, a_wFP);
+			fwrite(&(*a_ItemList)[ii].m_Cost, sizeof(int), 1, a_wFP);
+		}
+
+		fclose(a_wFP);
+	}
+}
+
 bool LevelSort(const ItemInfo &a, const ItemInfo &b)
 {
 	return a.m_ItLevel > b.m_ItLevel;
@@ -150,6 +209,7 @@ void AddItem(vector<ItemInfo>* a_UserItem)
 	a_UserItem->push_back(m_ItemTemp);
 
 	PrintItemList(a_UserItem);
+	SaveItemList(a_UserItem);
 }
 
 int ProbabilitySet(int _data, int _list)
@@ -213,12 +273,14 @@ void LevelUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 				cout << "강화성공!" << endl;
 				(*a_UserItem)[TempNum].m_ItLevel++;
 				(*a_UserItem)[TempNum].PrintInfo();
+				SaveItemList(a_UserItem);
 				continue;
 			}
 			else
 			{
 				cout << "강화실패!" << endl;
 				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				SaveItemList(a_UserItem);
 				break;
 			}
 		}
@@ -240,7 +302,7 @@ void GradeUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 
 		srand((unsigned)time(NULL));
 		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItGrade, _list);
-		cout << endl << "강화시 -1000Gold + 재료아이템이 소모됩니다. (1)강화 (그외)종료 확률<" << m_SuccessRate << "> : ";
+		cout << endl << "강화시 -1000Gold + 재료아이템이 소모됩니다. (1)강화 (그외)종료 확률<" << m_SuccessRate << "> " << "유저골드<" << g_GameGold << "> : ";
 		int a_Sel = 0;
 		cin >> a_Sel;
 		getchar();
@@ -305,6 +367,7 @@ void GradeUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 				if (Reinforcedmaterials < TempNum)
 					TempNum--;
 				(*a_UserItem)[TempNum].PrintInfo();
+				SaveItemList(a_UserItem);
 				continue;
 			}
 			else
@@ -314,6 +377,7 @@ void GradeUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 				if (Reinforcedmaterials < TempNum)
 					TempNum--;
 				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				SaveItemList(a_UserItem);
 				break;
 			}
 		}
@@ -357,7 +421,7 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 
 		srand((unsigned)time(NULL));
 		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItGrade, _list);
-		cout << endl << "강화시 같은 이름의 아이템이 소모됩니다(골드소모X) (1)강화 (그외)종료 확률<" << m_SuccessRate << "> : ";
+		cout << endl << "강화시 같은 이름의 아이템이 소모됩니다(골드소모X) (1)강화 (그외)종료 확률<" << m_SuccessRate << "> " << "유저골드<" << g_GameGold << "> : ";
 		int a_Sel = 0;
 		cin >> a_Sel;
 		getchar();
@@ -406,6 +470,7 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 				if (Reinforcedmaterials < TempNum)
 					TempNum--;
 				(*a_UserItem)[TempNum].PrintInfo();
+				SaveItemList(a_UserItem);
 				continue;
 			}
 			else
@@ -415,6 +480,7 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 				if (Reinforcedmaterials < TempNum)
 					TempNum--;
 				(*a_UserItem).erase(a_UserItem->begin() + TempNum);
+				SaveItemList(a_UserItem);
 				break;
 			}
 		}
@@ -483,9 +549,11 @@ void main()
 	UserSelHamsu[1] = UserSellPrintItemList;
 	UserSelHamsu[2] = DescentItem;
 
+	LoadItemList(&m_UserItem);
+
 	while (true)
 	{
-		cout << "(1)아이템추가 (2)아이템보기 (3)아이템강화 (4)프로그램종료 : ";
+		cout << "(1)아이템추가 (2)아이템보기 (3)아이템강화 (4)프로그램종료 유저골드<" << g_GameGold << "> : ";
 
 		int a_Sel = 0;
 
