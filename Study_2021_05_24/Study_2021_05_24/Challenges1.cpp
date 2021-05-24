@@ -539,30 +539,62 @@ void DescentItem(vector<ItemInfo>* a_UserItem)
 	}
 }
 
+void ItemSell(vector<ItemInfo>* a_UserItem)
+{
+	while (true)
+	{
+		PrintItemList(a_UserItem);
+		cout << "판매할 아이템 목록을 입력해 주세요 : ";
+		int a_Sel = -1;
+		cin >> a_Sel;
+		getchar();
+
+		a_Sel--;
+		if ((a_UserItem->size()-1) < a_Sel || a_Sel < 0)
+		{
+			cout << "잘못입력하셨습니다(Enter를 입력해주세요)" << endl;
+			getchar();
+			continue;
+		}
+		else
+		{
+			g_GameGold += (*a_UserItem)[a_Sel].m_Cost;
+			a_UserItem->erase(a_UserItem->begin() + a_Sel);
+
+			cout << endl << "판매가 완료되었습니다." << endl;
+			PrintItemList(a_UserItem);
+			cout << "유저골드<" << g_GameGold << ">" << endl;
+			SaveItemList(a_UserItem);
+			break;
+		}
+	}
+}
+
 void main()
 {
 	srand(time(NULL));
 
 	vector<ItemInfo> m_UserItem;
-	void (*UserSelHamsu[3])(vector<ItemInfo> *a);
+	void (*UserSelHamsu[4])(vector<ItemInfo> *a);
 	UserSelHamsu[0] = AddItem;
 	UserSelHamsu[1] = UserSellPrintItemList;
 	UserSelHamsu[2] = DescentItem;
+	UserSelHamsu[3] = ItemSell;
 
 	LoadItemList(&m_UserItem);
 
 	while (true)
 	{
-		cout << "(1)아이템추가 (2)아이템보기 (3)아이템강화 (4)프로그램종료 유저골드<" << g_GameGold << "> : ";
+		cout << "(1)아이템추가 (2)아이템보기 (3)아이템강화 (4)아이템판매 (5)프로그램종료 유저골드<" << g_GameGold << "> : ";
 
 		int a_Sel = 0;
 
 		cin >> a_Sel;
 		getchar();
 		
-		if (a_Sel < 0 || 3 < a_Sel)
+		if (a_Sel < 0 || 4 < a_Sel)
 		{
-			if (a_Sel == 4)
+			if (a_Sel == 5)
 				break;
 
 			system("cls");
