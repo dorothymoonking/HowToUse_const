@@ -76,16 +76,19 @@ void FtpDown(const char* src, const char* dest, bool (*prog)(int, int), void (*r
 bool ProgressWin(int total, int now)
 {
 	//각 엔진마다 설정해서 사용이 가능하다
+	return false;
 }
 
 bool ProgressD2D(int total, int now)
 {
 	//각 엔진마다 설정해서 사용이 가능하다
+	return false;
 }
 
 bool ProgressUnity(int total, int now)
 {
 	//각 엔진마다 설정해서 사용이 가능하다
+	return false;
 }
 
 bool Progress(int total, int now)
