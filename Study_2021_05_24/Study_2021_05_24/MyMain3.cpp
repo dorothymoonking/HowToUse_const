@@ -48,7 +48,25 @@ int Hamsu7X(int a, int b)
 //--- 리스트 다운로드로 함수 구현부
 void FtpDown(const char* src, const char* dest, bool (*prog)(int, int), void (*reEnd)())
 {
+	int total, now;
+	bool UserBreak;
 
+	total = 600;
+	now = 0;
+
+	for (now = 0; now < total; now++)
+	{
+		//다운로드 받는다. 한번에 한번씩 받는다.
+		Sleep(10);
+		
+		//과정 표시 함수를 호출해 준다.
+		UserBreak = prog(total, now);
+		if (UserBreak == true)
+		{
+			cout << "다운로드를 취소했습니다." << endl;
+			break;
+		}
+	}
 }
 
 //--- 파일 다운 로드 상황을 GUI에 표시해 주는 연출 구현 함수
