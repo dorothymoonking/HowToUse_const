@@ -51,6 +51,18 @@ void FtpDown(const char* src, const char* dest, bool (*prog)(int, int), void (*r
 
 }
 
+//--- 파일 다운 로드 상황을 GUI에 표시해 주는 연출 구현 함수
+bool Progress(int total, int now)
+{
+	return false;
+}
+
+//--- 다운로드 중료처리 함수 구현부
+void ReceiveEnd()
+{
+	cout << "응답완료" << endl;
+}
+
 void main()
 {
 	void (*HamPt_1)() = PrintFunc;
@@ -90,6 +102,9 @@ void main()
 	int (*TestHpt)(int, int) = Hamsu7X;
 	int ABC = TestHpt(12, 3);
 	cout << "Hamsu7x : " << ABC << endl;
+
+	//3, 활용 : 함수의 인자로 함수 포인터를 넘기는 방법
+	FtpDown("ftp:xxx.com", "c:\\Test", Progress, ReceiveEnd);
 
 	getchar();
 }
