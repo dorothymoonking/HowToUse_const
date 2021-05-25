@@ -15,7 +15,8 @@ using namespace std;
 //User 정보
 char g_UsName[128] = "히어로";
 int  g_GameGold = 100000;
-
+char g_ItName[8][128] = { "토끼의지팡이", "강아지의방패", "고양이의검",
+						  "싸이어인의장갑", "아기상어의단검", "드래곤의창", "엘프의반지" "사자의활" };
 class ItemInfo
 {
 public:
@@ -25,6 +26,15 @@ public:
 	int  m_Star = 0;
 	//성급 1 ~ 6성(업그레이트 확률은 성급이 올라갈 수록 점점 어려워지도록...)
 	int  m_Cost = 0;				//가격
+
+public:
+	ItemInfo()
+	{
+		m_Level = 1;
+		m_Grade = 7;
+		m_Star = 1;
+		m_Cost = 1000;
+	}
 
 public:
 	void PrintInfo()
@@ -68,12 +78,27 @@ void SaveItem(vector<ItemInfo>* a_ItemList)
 
 void AddItem(vector<ItemInfo>* a_ItemList)
 {
+	ItemInfo a_TempNode;
 
+	int ran = rand() % 8;
+	strcpy(a_TempNode.m_Name, g_ItName[ran]);
+	a_TempNode.m_Level = (rand() % 8) + 1;
+	a_TempNode.m_Grade = 7 - (rand() % 2);
+	a_TempNode.m_Star = (rand() % 8) + 1;
+	a_TempNode.m_Cost = (rand() % 901) + 100;
+	a_ItemList->push_back(a_TempNode);
 }
 
-void PrintList(vector<ItemInfo>* a_ItemList)
+void PrintList(vector<ItemInfo>* a_ItemList, bool a_isAdd = true)
 {
+	cout << endl << "<보유중인 무기 리스트>" << endl;
+	for (int i = 0; i < a_ItemList->size(); i++)
+	{
+		if (a_isAdd)
+		{
 
+		}
+	}
 }
 
 void MyShowSort(vector<ItemInfo>* a_ItemList, int a_SubSel)

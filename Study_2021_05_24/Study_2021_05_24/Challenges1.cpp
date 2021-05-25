@@ -251,6 +251,13 @@ void LevelUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 		cin >> a_Sel;
 		getchar();
 		
+		if ((*a_UserItem)[TempNum].m_ItLevel == 30)
+		{
+			cout << "강화수치가 MAX입니다." << endl;
+			getchar();
+			break;
+		}
+
 		if (g_GameGold < 1000)
 		{
 			cout << "강화비용이 부족합니다." << endl;
@@ -307,6 +314,13 @@ void GradeUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 		int a_Sel = 0;
 		cin >> a_Sel;
 		getchar();
+
+		if ((*a_UserItem)[TempNum].m_ItGrade == 7)
+		{
+			cout << "강화수치가 MAX입니다." << endl;
+			getchar();
+			break;
+		}
 
 		if (g_GameGold < 1000)
 		{
@@ -397,6 +411,13 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 			break;
 		}
 
+		if ((*a_UserItem)[TempNum].m_ItStar == 6)
+		{
+			cout << "강화수치가 MAX입니다." << endl;
+			getchar();
+			break;
+		}
+
 		for (int ii = 0; ii < a_UserItem->size(); ii++)
 		{
 			if (ii == TempNum)
@@ -421,7 +442,7 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 		}
 
 		srand((unsigned)time(NULL));
-		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItGrade, _list);
+		int m_SuccessRate = ProbabilitySet((*a_UserItem)[TempNum].m_ItStar, _list);
 		cout << endl << "강화시 같은 이름의 아이템이 소모됩니다(골드소모X) (1)강화 (그외)종료 확률<" << m_SuccessRate << "> " << "유저골드<" << g_GameGold << "> : ";
 		int a_Sel = 0;
 		cin >> a_Sel;
@@ -466,7 +487,7 @@ void StarUp(vector<ItemInfo>* a_UserItem, int TempNum, int _list)
 			if (a_Ran < m_SuccessRate)
 			{
 				cout << "강화성공!" << endl;
-				(*a_UserItem)[TempNum].m_ItGrade++;
+				(*a_UserItem)[TempNum].m_ItStar++;
 				(*a_UserItem).erase(a_UserItem->begin() + Reinforcedmaterials);
 				if (Reinforcedmaterials < TempNum)
 					TempNum--;
