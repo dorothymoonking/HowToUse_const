@@ -184,6 +184,7 @@ void UserSellPrintItemList(vector<ItemInfo>* a_UserItem)
 			vector<ItemInfo> a_CopyTemp = *a_UserItem;
 			sort(a_CopyTemp.begin(), a_CopyTemp.end(), SortHamsu[a_Sel]);
 			PrintItemList(&a_CopyTemp);
+			a_CopyTemp.clear();
 			break;
 		}
 
