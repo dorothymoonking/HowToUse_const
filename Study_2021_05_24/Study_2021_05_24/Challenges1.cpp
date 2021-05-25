@@ -611,6 +611,9 @@ void main()
 		getchar();
 		system("cls");
 	}
+
+	m_UserItem.clear();
+	getchar();
 }
 
 //1,아이템 추가 2,아이템보기 3,아이템 업그레이드 4,프로그램종료
