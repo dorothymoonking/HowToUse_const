@@ -185,7 +185,7 @@ void UserSellPrintItemList(vector<ItemInfo>* a_UserItem)
 			sort(a_CopyTemp.begin(), a_CopyTemp.end(), SortHamsu[a_Sel]);
 			PrintItemList(&a_CopyTemp);
 			break;
-;		}
+		}
 
 		else
 		{

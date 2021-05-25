@@ -61,6 +61,36 @@ void LoadItem(vector<ItemInfo>* a_ItemList)
 
 }
 
+void SaveItem(vector<ItemInfo>* a_ItemList)
+{
+
+}
+
+void AddItem(vector<ItemInfo>* a_ItemList)
+{
+
+}
+
+void PrintList(vector<ItemInfo>* a_ItemList)
+{
+
+}
+
+void MyShowSort(vector<ItemInfo>* a_ItemList, int a_SubSel)
+{
+	
+}
+
+void MyItemUpgrade(vector<ItemInfo>* a_ItemList, int a_SubSel)
+{
+	
+}
+
+void SellItem(vector<ItemInfo>* a_ItemList)
+{
+	
+}
+
 void main()
 {
 	system("mode con cols=121 lines=50");
@@ -95,22 +125,35 @@ void main()
 
 		if (a_Sel == 1) //1, 아이템추가
 		{
-
+			AddItem(&ItemList);
+			PrintList(&ItemList);
+			SaveItem(&ItemList);
 		}
 
 		else if (a_Sel == 2) //2, 아이템보기
 		{
-
+			int a_SubSel = 0;
+			cout << "그냥보기(1) 레벨순(2) 등급순(3) 성급순(4) : ";
+			cin >> a_SubSel;
+			cin.get();
+			MyShowSort(&ItemList, a_SubSel);
 		}
 
 		else if (a_Sel == 3) //3, 아이템강화
 		{
-
+			int a_SubSel = 0;
+			cout << "무엇을 강화하실건가요? ";
+			cout << "레벨(1) 등급(2) 성급(3) : ";
+			cin >> a_SubSel;
+			cin.get();
+			MyItemUpgrade(&ItemList, a_SubSel);
 		}
 
 		else if (a_Sel == 4) //4, 아이템판매
 		{
-
+			PrintList(&ItemList);
+			SellItem(&ItemList);
+			SaveItem(&ItemList);
 		}
 
 		cout << "<Push Enter>";
