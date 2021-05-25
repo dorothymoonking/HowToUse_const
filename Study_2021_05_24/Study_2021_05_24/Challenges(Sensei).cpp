@@ -299,7 +299,10 @@ void main()
 			SaveItem(&ItemList);
 		}
 
-		cout << "<Push Enter>";
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
+		cout << "<Press the Enter key to move on.>";
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); //글자색 복원(흰색)
+
 		cin.get();
 		system("cls");
 	}//while (true)
