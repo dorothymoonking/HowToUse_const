@@ -66,6 +66,22 @@ public:
 
 // 유저정보와 아이템 리스트는 파일로 저장 로딩
 
+//----- 정렬 조건 함수
+bool LvSort(const ItemInfo& a, const ItemInfo& b)
+{
+	return a.m_Level > a.m_Level;
+}
+
+bool GradeSort(const ItemInfo& a, const ItemInfo& b)
+{
+	return a.m_Grade < a.m_Grade;
+}
+
+bool StarSort(const ItemInfo& a, const ItemInfo& b)
+{
+	return a.m_Star > a.m_Star;
+}
+//-----
 void LoadItem(vector<ItemInfo>* a_ItemList)
 {
 	FILE* a_rFP = fopen("MySave.abc", "rb");
@@ -168,15 +184,30 @@ void MyShowSort(vector<ItemInfo>* a_ItemList, int a_SubSel)
 {
 	if (a_SubSel == 1) //레벨순
 	{
+		vector<ItemInfo> a_TempList;
+		a_TempList.assign(a_ItemList->begin(), a_ItemList->end());
 
+		sort(a_TempList.begin(), a_TempList.end(), LvSort);
+		PrintList(&a_TempList);
+		a_TempList.clear();
 	}
 	else if (a_SubSel == 2) //등급순
 	{
+		vector<ItemInfo> a_TempList;
+		a_TempList.assign(a_ItemList->begin(), a_ItemList->end());
 
+		sort(a_TempList.begin(), a_TempList.end(), GradeSort);
+		PrintList(&a_TempList);
+		a_TempList.clear();
 	}
 	else if (a_SubSel == 3) //성급순
 	{
+		vector<ItemInfo> a_TempList;
+		a_TempList.assign(a_ItemList->begin(), a_ItemList->end());
 
+		sort(a_TempList.begin(), a_TempList.end(), StarSort);
+		PrintList(&a_TempList);
+		a_TempList.clear();
 	}
 	else
 	{
